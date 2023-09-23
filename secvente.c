@@ -62,8 +62,13 @@ int main()
 		}
 	}
 
+	unsigned char exista, *uz;
 	int x, y, st, dr, mij;
-	char exista;
+	unsigned *a;
+
+	a = (unsigned*)calloc(n+1, sizeof(unsigned));
+
+	uz = (unsigned char*)calloc(n+1, sizeof(unsigned char));
 
 	for (exista = i = 1; i <= m && exista; i++) {
 		fscanf(fin, "%d %d", &x, &y);
@@ -84,17 +89,23 @@ int main()
 			while (dr-st > 1) {
 				mij = st + (dr-st)/2;
 
-				if (b[mij] >= x) {
+				if (b[mij] >= y) {
 					dr = mij;
 				} else {
-					st = mij;
+					if (b[mij] >= x) {
+						st = dr = mij;
+					} else {
+						st = mij;
+					}
 				}
 			}
 
-			if (st == -1) {
+			if (st == dr) {
 				exista = 0;
 			}
 		}
+
+		a[x] = y, uz[y] = 1;
 	}
 
 	fclose(fin);
@@ -105,12 +116,14 @@ int main()
 		fprintf(fout, "IMPOSIBIL");
 	} else {
 		fprintf(fout, "PENDING");
-	}
-	
+	}	
+
 	fclose(fout);
 
 	free(b);	
+	free(a);
+	free(uz);
 
 	return 0;
 }
-// scor 0
+// scor 10
