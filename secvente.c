@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MIN_N 1
+#define MAX_N 100000
+
+int main()
+{
+	FILE *fin = fopen("secvente.in", "r");
+
+	if (!fin) {
+		printf("Eroare fisier secvente.in\n");
+		return 1;
+	}
+
+	int n, m;
+
+	fscanf(fin, "%d %d", &n, &m);
+
+	if (n < MIN_N || n > MAX_N) {
+		printf("Eroare valoare N\n");
+		return 2;
+	}
+
+	if (m < 0 || m > n) {
+		printf("Eroare valoare M\n");
+		return 3;
+	}
+	
+	char c;
+	int i;
+	unsigned *b, nr;
+
+	for (nr = 0, i = 1; i <= n; i++) {
+		fscanf(fin, " %c", &c);
+
+		if (c < '0' || c > '1') {
+			printf("Eroare valoare B[%d] = '%c'\n", i, c);
+			return 4;
+		}
+
+		if (c == '1') {
+			if (nr == 0) {
+				b = (unsigned*)malloc((nr+1)*sizeof(unsigned));
+
+				if (!b) {
+					printf("Eroare alocare memorie *b\n");
+					return 5;
+				}
+
+				b[nr++] = i;
+			} else {
+				b = (unsigned*)realloc(b, (nr+1)*sizeof(unsigned));
+
+				if (!b) {
+					printf("Eroare realocare memorie *b\n");
+					return 6;
+				}
+
+				b[nr++] = i;
+			}
+		}
+	}
+
+	int x, y, st, dr, mij;
+	char exista;
+
+	for (exista = i = 1; i <= m && exista; i++) {
+		fscanf(fin, "%d %d", &x, &y);
+
+		if (x < 0 || x > n) {
+			printf("Eroare valoare x\n");
+			return 7;
+		}
+
+		if (y < 0 || y > n) {
+			printf("Eroare valoare y\n");
+			return 8;
+		}
+
+		if (y > x) {
+			st = -1, dr = nr;
+
+			while (dr-st > 1) {
+				mij = st + (dr-st)/2;
+
+				if (b[mij] >= x) {
+					dr = mij;
+				} else {
+					st = mij;
+				}
+			}
+
+			if (st == -1) {
+				exista = 0;
+			}
+		}
+	}
+
+	fclose(fin);
+
+	FILE *fout = fopen("secvente.out", "w");
+
+	if (!exista) {
+		fprintf(fout, "IMPOSIBIL");
+	} else {
+		fprintf(fout, "PENDING");
+	}
+	
+	fclose(fout);
+
+	free(b);	
+
+	return 0;
+}
+// scor 0
