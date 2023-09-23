@@ -42,21 +42,17 @@ int main()
 		if (c == '1') {
 			if (nr == 0) {
 				b = (unsigned*)malloc((nr+1)*sizeof(unsigned));
-
 				if (!b) {
 					printf("Eroare alocare memorie *b\n");
 					return 5;
 				}
-
 				b[nr++] = i;
 			} else {
 				b = (unsigned*)realloc(b, (nr+1)*sizeof(unsigned));
-
 				if (!b) {
 					printf("Eroare realocare memorie *b\n");
 					return 6;
 				}
-
 				b[nr++] = i;
 			}
 		}
@@ -70,19 +66,19 @@ int main()
 
 	uz = (unsigned char*)calloc(n+1, sizeof(unsigned char));
 
-	for (exista = i = 1; i <= m && exista; i++) {
+	exista = nr > 0 ? 1 : 0;
+
+	for (i = 1; i <= m && exista; i++) {
 		fscanf(fin, "%d %d", &x, &y);
 
 		if (x < 0 || x > n) {
 			printf("Eroare valoare x\n");
 			return 7;
 		}
-
 		if (y < 0 || y > n) {
 			printf("Eroare valoare y\n");
 			return 8;
 		}
-
 		if (y > x) {
 			st = -1, dr = nr;
 
@@ -115,21 +111,18 @@ int main()
 	if (!exista) {
 		fprintf(fout, "IMPOSIBIL");
 	} else {
-		unsigned urmpoz = 1;
+		int j;
 
-		for (i = 0; i < nr; i++) {
-			for (x = 1; x <= b[i]; x++) {
-				if (!uz[x]) {
-					while (a[urmpoz] && urmpoz <= n) {
-						urmpoz++;
-					}	
-					
-					if (urmpoz <= n) {
-						a[urmpoz] = x;
-						uz[x] = 1;
-					}	
+		for (st = 1, i = 0; i < nr && st <= n; i++) {
+			for (y = dr = b[i], j = st; j <= dr; j++) {
+				if (!a[j]) {
+					for (x = y; x >= 1 && uz[x]; x--);
+
+					a[j] = x, uz[x] = 1, y = x;
 				}
 			}
+
+			st = dr+1;
 		}
 
 		for (i = 1; i <= n; i++) {
@@ -145,4 +138,4 @@ int main()
 
 	return 0;
 }
-// scor 10
+// scor 100
