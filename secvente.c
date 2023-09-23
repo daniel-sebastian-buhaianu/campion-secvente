@@ -115,7 +115,26 @@ int main()
 	if (!exista) {
 		fprintf(fout, "IMPOSIBIL");
 	} else {
-		fprintf(fout, "PENDING");
+		unsigned urmpoz = 1;
+
+		for (i = 0; i < nr; i++) {
+			for (x = 1; x <= b[i]; x++) {
+				if (!uz[x]) {
+					while (a[urmpoz] && urmpoz <= n) {
+						urmpoz++;
+					}	
+					
+					if (urmpoz <= n) {
+						a[urmpoz] = x;
+						uz[x] = 1;
+					}	
+				}
+			}
+		}
+
+		for (i = 1; i <= n; i++) {
+			fprintf(fout, "%u ", a[i]);
+		}
 	}	
 
 	fclose(fout);
